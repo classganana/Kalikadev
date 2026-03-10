@@ -8,6 +8,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { defaultMetadata } from "@/lib/seo";
 import { Providers } from "@/components/providers";
+import { OrganizationJsonLd } from "@/components/seo/json-ld";
 
 import "./globals.css";
 
@@ -33,10 +34,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
+        <OrganizationJsonLd />
         <Providers>{children}</Providers>
       </body>
     </html>

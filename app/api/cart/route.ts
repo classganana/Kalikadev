@@ -1,21 +1,29 @@
 /**
  * GET /api/cart - Fetch cart for logged-in user.
- * POST /api/cart - Add item (body: { productId or productSlug, quantity? })
+ * POST /api/cart - Add item (body: { productId or productSlug, quantity?, variantId? })
  */
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 import { connectDB } from "@/lib/db";
-import { getSession } from "@/lib/auth";
 import { getCartForUser, addToCart } from "@/lib/cart";
 import { Product } from "@/models";
 
-export async function GET() {
+async function getUserId(request: NextRequest): Promise<string | null> {
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+  return (token?.id as string) ?? null;
+}
+
+export async function GET(request: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session?.user?.id) {
+    const userId = await getUserId(request);
+    if (!userId || userId === "admin" || !/^[a-f0-9]{24}$/i.test(userId)) {
       return NextResponse.json([]);
     }
 
-    const items = await getCartForUser(session.user.id);
+    const items = await getCartForUser(userId);
     return NextResponse.json(items);
   } catch (error) {
     console.error("[GET /api/cart]", error);
@@ -26,14 +34,17 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session?.user?.id) {
+    const userId = await getUserId(request);
+    if (!userId || userId === "admin") {
       return NextResponse.json(
         { error: "Sign in to save cart" },
         { status: 401 }
       );
+    }
+    if (!/^[a-f0-9]{24}$/i.test(userId)) {
+      return NextResponse.json({ error: "Invalid user" }, { status: 400 });
     }
 
     await connectDB();
@@ -69,12 +80,12 @@ export async function POST(request: Request) {
     }
 
     await addToCart(
-      session.user.id,
+      userId,
       resolvedProductId,
       quantity,
       variantId ?? null
     );
-    const items = await getCartForUser(session.user.id);
+    const items = await getCartForUser(userId);
     return NextResponse.json(items);
   } catch (error) {
     console.error("[POST /api/cart]", error);

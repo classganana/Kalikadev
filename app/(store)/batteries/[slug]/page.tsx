@@ -6,9 +6,11 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProductBySlug, formatSpecSummary } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
+import { siteConfig } from "@/lib/seo";
 import { ProductGallery } from "@/components/store/product-gallery";
 import { SpecTable } from "@/components/store/spec-table";
 import { AddToCartButton } from "@/components/store/add-to-cart-button";
+import { ProductJsonLd } from "@/components/seo/json-ld";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -49,6 +51,7 @@ export default async function BatteryDetailPage({ params }: PageProps) {
   }
 
   const price = formatPrice(product.price);
+  const productUrl = `${siteConfig.url}/batteries/${product.slug}`;
 
   const specRows = product.specification
     ? [
@@ -65,7 +68,17 @@ export default async function BatteryDetailPage({ params }: PageProps) {
     : [];
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+    <>
+      <ProductJsonLd
+        name={product.name}
+        description={product.description}
+        image={product.images}
+        price={product.price}
+        url={productUrl}
+        availability={product.stock > 0 ? "InStock" : "OutOfStock"}
+        sku={product.slug}
+      />
+      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
       <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Gallery */}
         <ProductGallery images={product.images} productName={product.name} />
@@ -105,5 +118,6 @@ export default async function BatteryDetailPage({ params }: PageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

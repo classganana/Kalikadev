@@ -8,8 +8,10 @@ import {
   getVariantsByProductId,
 } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
+import { siteConfig } from "@/lib/seo";
 import { ProductGallery } from "@/components/store/product-gallery";
 import { AddToCartButton } from "@/components/store/add-to-cart-button";
+import { ProductJsonLd } from "@/components/seo/json-ld";
 import { isApparelEnabled } from "@/lib/feature-flags";
 
 interface PageProps {
@@ -60,12 +62,29 @@ export default async function ApparelDetailPage({ params }: PageProps) {
   const variants = await getVariantsByProductId(product._id);
 
   const hasVariants = variants.length > 0;
+  const minPrice = hasVariants
+    ? Math.min(...variants.map((v) => v.price))
+    : product.price;
+  const totalStock = hasVariants
+    ? variants.reduce((sum, v) => sum + (v.stock ?? 0), 0)
+    : product.stock ?? 0;
   const displayPrice = hasVariants
-    ? `From ${formatPrice(Math.min(...variants.map((v) => v.price)))}`
+    ? `From ${formatPrice(minPrice)}`
     : formatPrice(product.price);
+  const productUrl = `${siteConfig.url}/apparel/${product.slug}`;
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+    <>
+      <ProductJsonLd
+        name={product.name}
+        description={product.description}
+        image={product.images}
+        price={minPrice}
+        url={productUrl}
+        availability={totalStock > 0 ? "InStock" : "OutOfStock"}
+        sku={product.slug}
+      />
+      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
       <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
         <ProductGallery images={product.images} productName={product.name} />
 
@@ -101,5 +120,6 @@ export default async function ApparelDetailPage({ params }: PageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }
