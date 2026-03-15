@@ -4,8 +4,8 @@
  * Cart page content - Product list, quantity selector, subtotal, checkout.
  * Premium UI consistent with store design.
  */
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "./product-image";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/contexts/cart-context";
 import { formatPrice } from "@/lib/utils";
@@ -112,12 +112,10 @@ export function CartPageClient() {
                   href={`${item.basePath ?? "/batteries"}/${item.productSlug}`}
                   className="relative size-24 shrink-0 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-900"
                 >
-                  <Image
+                  <ProductImage
                     src={item.image || "https://picsum.photos/96/96"}
                     alt={item.name}
-                    fill
                     className="object-cover"
-                    sizes="96px"
                   />
                 </Link>
                 <div className="min-w-0 flex-1">

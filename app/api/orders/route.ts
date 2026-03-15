@@ -7,6 +7,7 @@ import { getToken } from "next-auth/jwt";
 import { connectDB } from "@/lib/db";
 import { Order } from "@/models";
 import { createOrder } from "@/lib/orders";
+import { isValidGSTIN } from "@/lib/gstin";
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,6 +24,32 @@ export async function POST(request: NextRequest) {
     if (!customerName?.trim() || !customerPhone?.trim() || !customerAddress?.trim()) {
       return NextResponse.json(
         { error: "Customer name, phone, and address are required" },
+        { status: 400 }
+      );
+    }
+
+    if (!customerCompany?.trim() || !customerGst?.trim()) {
+      return NextResponse.json(
+        { error: "Company name and GSTIN are required" },
+        { status: 400 }
+      );
+    }
+
+    // Validate Indian mobile: 10 digits starting with 6/7/8/9, optional 91 prefix
+    const phoneDigits = String(customerPhone).replace(/\D/g, "");
+    const isValidPhone =
+      /^[6-9]\d{9}$/.test(phoneDigits) || /^91[6-9]\d{9}$/.test(phoneDigits);
+    if (!isValidPhone) {
+      return NextResponse.json(
+        { error: "Enter a valid 10-digit Indian mobile number" },
+        { status: 400 }
+      );
+    }
+
+    // Validate GSTIN: official format + Luhn mod 36 checksum
+    if (!isValidGSTIN(String(customerGst))) {
+      return NextResponse.json(
+        { error: "Enter a valid 15-character GSTIN (format: 2 digits + 5 letters + 4 digits + 1 letter + entity + Z + check digit)" },
         { status: 400 }
       );
     }

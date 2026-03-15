@@ -5,6 +5,7 @@
  */
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ImageUploadField } from "./image-upload-field";
 
 interface ApparelFormData {
   name: string;
@@ -204,15 +205,12 @@ export function ApparelForm({ product }: ApparelFormProps) {
           </div>
           <div className="sm:col-span-2">
             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Image URLs * (one per line)
+              Images * (upload or paste URLs)
             </label>
-            <textarea
+            <ImageUploadField
               value={form.images}
-              onChange={(e) => update("images", e.target.value)}
-              required
-              rows={3}
-              placeholder="https://picsum.photos/600/600"
-              className="mt-1.5 w-full rounded-lg border border-zinc-300 px-4 py-3 font-mono text-sm dark:border-zinc-600 dark:bg-zinc-950 dark:text-white"
+              onChange={(v) => update("images", v)}
+              placeholder="https://example.com/image.jpg"
             />
           </div>
         </div>

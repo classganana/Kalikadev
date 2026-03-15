@@ -1,0 +1,39 @@
+#!/bin/bash
+# KD Lithium - Deploy to EC2 (build locally, deploy artifacts)
+# Run from project root: ./deploy.sh
+
+set -e
+
+EC2_HOST="ubuntu@52.66.202.5"
+EC2_PATH="/home/ubuntu/Kalikadev"
+SSH_KEY="/Users/ayushdixit/Documents/dev-outreach-key.pem"
+
+echo "=== 1. Building locally (uses Webpack, portable to EC2) ==="
+npm run build
+
+echo ""
+echo "=== 2. Syncing to EC2 (excluding node_modules) ==="
+rsync -avz --delete \
+  -e "ssh -i $SSH_KEY" \
+  --exclude 'node_modules' \
+  --exclude '.git' \
+  --exclude '.env.local' \
+  --exclude '.env.production' \
+  --filter 'P public/uploads' \
+  ./ "$EC2_HOST:$EC2_PATH/"
+
+echo ""
+echo "=== 3. Installing deps & restarting PM2 on EC2 ==="
+ssh -i "$SSH_KEY" "$EC2_HOST" << 'REMOTE'
+  cd /home/ubuntu/Kalikadev
+  npm install --production
+  pm2 restart kalikadev || pm2 start npm --name "kalikadev" -- start
+  pm2 save
+  echo ""
+  pm2 status
+  echo ""
+  echo "App: http://localhost:3000 (from EC2) | https://kdlithium.in"
+REMOTE
+
+echo ""
+echo "=== Deploy complete ==="

@@ -5,8 +5,8 @@
  */
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import { ProductImage } from "./product-image";
 
 interface ProductGalleryProps {
   images: string[];
@@ -20,13 +20,10 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   return (
     <div className="space-y-4">
       <div className="relative aspect-square overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900">
-        <Image
+        <ProductImage
           src={mainImage}
           alt={`${productName} - image ${selectedIndex + 1}`}
-          fill
           className="object-cover"
-          priority
-          sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
       {images.length > 1 && (
@@ -43,12 +40,10 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               }`}
               aria-label={`View image ${i + 1}`}
             >
-              <Image
+              <ProductImage
                 src={src}
                 alt=""
-                fill
                 className="object-cover"
-                sizes="80px"
               />
             </button>
           ))}

@@ -12,10 +12,10 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Apparel",
-  description: "Premium Kalikadev apparel and merchandise.",
+  description: "Premium KD Lithium apparel and merchandise.",
   openGraph: {
-    title: "Apparel | Kalikadev",
-    description: "Premium Kalikadev apparel and merchandise.",
+    title: "Apparel | KD Lithium",
+    description: "Premium KD Lithium apparel and merchandise.",
   },
 };
 
@@ -43,7 +43,7 @@ export default async function ApparelPage() {
           Apparel
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">
-          Premium Kalikadev apparel and merchandise.
+          Premium KD Lithium apparel and merchandise.
         </p>
       </div>
 

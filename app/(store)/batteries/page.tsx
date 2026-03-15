@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description:
     "High-performance, long-life lithium batteries for every application. Power Cell Pro, Compact Energy, and more.",
   openGraph: {
-    title: "Lithium Batteries | Kalikadev",
+    title: "Lithium Batteries | KD Lithium",
     description:
       "High-performance, long-life lithium batteries for every application.",
   },

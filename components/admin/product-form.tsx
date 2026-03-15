@@ -5,6 +5,7 @@
  */
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ImageUploadField } from "./image-upload-field";
 
 interface ProductFormData {
   name: string;
@@ -92,7 +93,7 @@ export function ProductForm({ product }: ProductFormProps) {
       .filter(Boolean);
 
     if (images.length === 0) {
-      setError("At least one image URL is required");
+      setError("At least one image is required (upload or paste URL)");
       setIsSubmitting(false);
       return;
     }
@@ -230,16 +231,11 @@ export function ProductForm({ product }: ProductFormProps) {
             />
           </div>
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Image URLs * (one per line)
-            </label>
-            <textarea
+            <ImageUploadField
               value={form.images}
-              onChange={(e) => update("images", e.target.value)}
-              required
-              rows={3}
-              placeholder="https://picsum.photos/600/600"
-              className="mt-1.5 w-full rounded-lg border border-zinc-300 px-4 py-3 font-mono text-sm dark:border-zinc-600 dark:bg-zinc-950 dark:text-white"
+              onChange={(v) => update("images", v)}
+              label="Product Images *"
+              hint="Upload battery images or paste URLs (one per line)"
             />
           </div>
         </div>

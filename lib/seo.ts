@@ -6,12 +6,12 @@
 import type { Metadata } from "next";
 
 export const siteConfig = {
-  name: "Kalikadev",
+  name: "KD Lithium",
   description:
     "Premium lithium batteries for performance and longevity. Engineered for a sustainable future.",
-  url: process.env.NEXTAUTH_URL ?? "https://kalikadev.com",
+  url: process.env.NEXTAUTH_URL ?? "https://kdlithium.in",
   ogImage: "/og-image.png",
-  twitterHandle: "@kalikadev",
+  twitterHandle: "@kdlithium",
 };
 
 export const defaultMetadata: Metadata = {

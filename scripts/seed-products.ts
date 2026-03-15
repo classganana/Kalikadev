@@ -98,10 +98,10 @@ const SEED_PRODUCTS = [
 
 const SEED_APPAREL = [
   {
-    name: "Kalikadev Premium Tee",
+    name: "KD Lithium Premium Tee",
     slug: "kalika-premium-tee",
     description:
-      "Premium cotton t-shirt with Kalikadev branding. Perfect for everyday wear. Soft, breathable fabric with a relaxed fit.",
+      "Premium cotton t-shirt with KD Lithium branding. Perfect for everyday wear. Soft, breathable fabric with a relaxed fit.",
     price: 499,
     category: "apparel",
     productType: "apparel",
@@ -120,10 +120,10 @@ const SEED_APPAREL = [
     ],
   },
   {
-    name: "Kalikadev Hoodie",
+    name: "KD Lithium Hoodie",
     slug: "kalika-hoodie",
     description:
-      "Cozy fleece hoodie with embroidered Kalikadev logo. Ideal for cool evenings and outdoor events. Unisex fit.",
+      "Cozy fleece hoodie with embroidered KD Lithium logo. Ideal for cool evenings and outdoor events. Unisex fit.",
     price: 1199,
     category: "apparel",
     productType: "apparel",
@@ -139,10 +139,10 @@ const SEED_APPAREL = [
     ],
   },
   {
-    name: "Kalikadev Cap",
+    name: "KD Lithium Cap",
     slug: "kalika-cap",
     description:
-      "Structured cap with Kalikadev logo patch. Adjustable strap for a perfect fit. Ideal for outdoor and casual wear.",
+      "Structured cap with KD Lithium logo patch. Adjustable strap for a perfect fit. Ideal for outdoor and casual wear.",
     price: 399,
     category: "apparel",
     productType: "apparel",

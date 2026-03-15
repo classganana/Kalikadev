@@ -94,7 +94,11 @@ export function NavbarAuth() {
             type="button"
             onClick={() => {
               setOpen(false);
-              signOut({ callbackUrl: window.location.origin });
+              const base =
+                process.env.NEXT_PUBLIC_SITE_URL ||
+                (typeof window !== "undefined" ? window.location.origin : "");
+              const path = typeof window !== "undefined" ? window.location.pathname || "/" : "/";
+              signOut({ callbackUrl: `${base}${path}` });
             }}
             className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >

@@ -2,17 +2,28 @@
 
 /**
  * Checkout form - Name, phone, address. Submits to WhatsApp.
+ * Validates Indian mobile number (10 digits, 6–9 start) and GSTIN (15-char format).
  */
 import { useState } from "react";
+
+/** Indian mobile: 10 digits starting with 6/7/8/9, optional 91/+91 prefix */
+const INDIAN_PHONE_REGEX = /^(\+91|91)?[6-9]\d{9}$/;
+
+function isValidIndianPhone(value: string): boolean {
+  const digits = value.replace(/\D/g, "");
+  return INDIAN_PHONE_REGEX.test(value) || (digits.length === 10 && /^[6-9]/.test(digits));
+}
+
 import Link from "next/link";
-import Image from "next/image";
 import { useCart } from "@/contexts/cart-context";
+import { ProductImage } from "./product-image";
 import {
   buildWhatsAppMessage,
   getWhatsAppRedirectUrl,
   type CustomerDetails,
 } from "@/lib/whatsapp";
 import { formatPrice } from "@/lib/utils";
+import { isValidGSTIN } from "@/lib/gstin";
 
 export function CheckoutForm() {
   const { items } = useCart();
@@ -32,10 +43,18 @@ export function CheckoutForm() {
   const validate = (): boolean => {
     const e: Partial<CustomerDetails> = {};
     if (!form.name.trim()) e.name = "Name is required";
-    if (!form.phone.trim()) e.phone = "Phone is required";
+    if (!form.phone.trim()) {
+      e.phone = "Phone is required";
+    } else if (!isValidIndianPhone(form.phone)) {
+      e.phone = "Enter a valid 10-digit Indian mobile number (e.g. 9876543210)";
+    }
     if (!form.address.trim()) e.address = "Address is required";
     if (!form.companyName?.trim()) e.companyName = "Company name is required";
-    if (!form.gst?.trim()) e.gst = "GSTIN is required";
+    if (!form.gst?.trim()) {
+      e.gst = "GSTIN is required";
+    } else if (!isValidGSTIN(form.gst)) {
+      e.gst = "Enter a valid 15-character GSTIN (e.g. 27AABCU9603R1ZM)";
+    }
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -171,8 +190,10 @@ export function CheckoutForm() {
                   value={form.phone}
                   onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                   className="mt-1.5 w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:placeholder-zinc-500 dark:focus:border-white dark:focus:ring-white"
-                  placeholder="+1 234 567 8900"
+                  placeholder="9876543210"
                   autoComplete="tel"
+                  inputMode="numeric"
+                  maxLength={14}
                 />
                 {errors.phone && (
                   <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -235,9 +256,12 @@ export function CheckoutForm() {
                   id="gst"
                   type="text"
                   value={form.gst ?? ""}
-                  onChange={(e) => setForm((f) => ({ ...f, gst: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, gst: e.target.value.toUpperCase().slice(0, 15) }))
+                  }
                   className="mt-1.5 w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:placeholder-zinc-500 dark:focus:border-white dark:focus:ring-white"
-                  placeholder="e.g. 27AABCU9603R1ZM"
+                  placeholder="27AABCU9603R1ZM"
+                  maxLength={15}
                 />
                 {errors.gst && (
                   <p className="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -262,12 +286,10 @@ export function CheckoutForm() {
                   className="flex gap-4"
                 >
                   <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-zinc-200 dark:bg-zinc-800">
-                    <Image
+                    <ProductImage
                       src={item.image || "https://picsum.photos/56/56"}
                       alt={item.name}
-                      fill
                       className="object-cover"
-                      sizes="56px"
                     />
                   </div>
                   <div className="min-w-0 flex-1">

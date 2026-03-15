@@ -2,8 +2,8 @@
  * Product Card - Elegant product display with hover states.
  * Image, name, spec, price. Lightweight Tailwind transitions.
  */
-import Image from "next/image";
 import Link from "next/link";
+import { ProductImage } from "./product-image";
 import { formatPrice } from "@/lib/utils";
 
 export interface ProductCardProps {
@@ -34,12 +34,10 @@ export function ProductCard({
       <article className="flex flex-col">
         {/* Image container - hover scale + shadow */}
         <div className="relative aspect-square overflow-hidden rounded-2xl bg-zinc-100 transition-all duration-300 ease-out group-hover:shadow-lg group-hover:shadow-zinc-900/5 dark:bg-zinc-900 dark:group-hover:shadow-zinc-950/50">
-          <Image
+          <ProductImage
             src={imageSrc}
             alt={imageAlt}
-            fill
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="transition-transform duration-500 ease-out group-hover:scale-105"
           />
         </div>
 

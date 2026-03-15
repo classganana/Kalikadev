@@ -42,7 +42,7 @@ export function StoreFooter() {
               href="/"
               className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-white"
             >
-              Kalikadev
+              KD Lithium
             </Link>
             <p className="mt-4 max-w-xs text-sm text-zinc-600 dark:text-zinc-400">
               Premium lithium batteries for a sustainable future.
@@ -109,7 +109,7 @@ export function StoreFooter() {
 
         <div className="mt-12 border-t border-zinc-200 pt-8 dark:border-zinc-800">
           <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
-            © {currentYear} Kalikadev. All rights reserved.
+            © {currentYear} KD Lithium. All rights reserved.
           </p>
         </div>
       </div>

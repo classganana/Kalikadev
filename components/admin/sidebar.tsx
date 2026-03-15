@@ -6,7 +6,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { LayoutDashboard, Package, Plus, ShoppingBag, Shirt, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Plus, ShoppingBag, Shirt, LogOut, ExternalLink } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -27,7 +27,7 @@ export function AdminSidebar() {
           href="/admin"
           className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white"
         >
-          Kalikadev Admin
+          KD Lithium Admin
         </Link>
       </div>
       <nav className="flex-1 space-y-1 p-4">
@@ -52,17 +52,21 @@ export function AdminSidebar() {
       <div className="border-t border-zinc-200 p-4 dark:border-zinc-800">
         <Link
           href="/"
-          className="mb-2 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-white"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-3 flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100"
         >
+          <ExternalLink className="size-4" strokeWidth={1.5} />
           View Store
         </Link>
         <button
           type="button"
-          onClick={() =>
-            signOut({
-              callbackUrl: `${window.location.origin}/admin/login`,
-            })
-          }
+          onClick={() => {
+            const base =
+              (typeof window !== "undefined" && process.env.NEXT_PUBLIC_SITE_URL) ||
+              (typeof window !== "undefined" ? window.location.origin : "");
+            signOut({ callbackUrl: `${base}/admin/login` });
+          }}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-white"
         >
           <LogOut className="size-4" strokeWidth={1.5} />

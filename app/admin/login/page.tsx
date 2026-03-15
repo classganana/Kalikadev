@@ -63,7 +63,7 @@ function AdminLoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="mt-1.5 w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-white dark:focus:border-white dark:focus:ring-white"
-                placeholder="admin@kalika.dev"
+                placeholder="admin@kdlithium.in"
               />
             </div>
             <div>

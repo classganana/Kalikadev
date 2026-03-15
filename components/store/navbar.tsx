@@ -51,7 +51,7 @@ export function StoreNavbar() {
             href="/"
             className="truncate text-xl font-semibold tracking-[-0.02em] text-zinc-900 transition-opacity duration-200 hover:opacity-70 dark:text-white"
           >
-            Kalikadev
+            KD Lithium
           </Link>
         </div>
 

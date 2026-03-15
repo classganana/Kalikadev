@@ -1,4 +1,4 @@
-# Kalikadev — Premium Ecommerce
+# KD Lithium — Premium Ecommerce
 
 High-performance ecommerce platform for lithium batteries, with future support for apparel.
 
@@ -79,4 +79,4 @@ Populates MongoDB with 6 battery products and their specifications. Requires `MO
 | `/api/products` | GET all products |
 | `/api/products/[slug]` | GET product by slug |
 | `/api/health` | Health check endpoint |
-# Kalikadev
+# KD Lithium

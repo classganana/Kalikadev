@@ -4,8 +4,8 @@
 import { connectDB } from "@/lib/db";
 import { Product } from "@/models";
 import Link from "next/link";
-import Image from "next/image";
 import { formatPrice } from "@/lib/utils";
+import { ProductImage } from "@/components/store/product-image";
 import { ProductsListActions } from "@/components/admin/products-list-actions";
 
 export default async function AdminProductsPage() {
@@ -92,12 +92,10 @@ export default async function AdminProductsPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
                       <div className="relative size-12 shrink-0 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-                        <Image
+                        <ProductImage
                           src={product.images[0] || "https://picsum.photos/48/48"}
                           alt={product.name}
-                          fill
                           className="object-cover"
-                          sizes="48px"
                         />
                       </div>
                       <div>

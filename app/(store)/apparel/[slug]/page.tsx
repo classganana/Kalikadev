@@ -35,7 +35,7 @@ export async function generateMetadata({
     title: product.name,
     description: product.description,
     openGraph: {
-      title: `${product.name} | Kalikadev`,
+      title: `${product.name} | KD Lithium`,
       description: product.description,
       images: product.images.length > 0 ? [product.images[0]] : undefined,
     },

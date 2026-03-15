@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db";
 import { User } from "@/models";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "admin@kalika.dev";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "admin@kdlithium.in";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 export const authOptions: NextAuthOptions = {
