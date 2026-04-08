@@ -5,13 +5,10 @@
  */
 "use client";
 
+import { getImageUrl } from "@/lib/utils";
+
 const FALLBACK_SRC =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Crect fill='%23e4e4e7' width='96' height='96'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2371717a' font-size='12'%3E?%3C/text%3E%3C/svg%3E";
-
-function resolveSrc(src: string): string {
-  if (!src || src.startsWith("http")) return src;
-  return src.startsWith("/") ? src : `/${src.replace(/^\//, "")}`;
-}
 
 export interface ProductImageProps {
   src: string;
@@ -28,7 +25,7 @@ export function ProductImage({
   className = "",
   fill = true,
 }: ProductImageProps) {
-  const resolved = resolveSrc(src);
+  const resolved = getImageUrl(src);
 
   return (
     <img

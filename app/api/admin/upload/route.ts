@@ -1,14 +1,29 @@
 /**
  * POST /api/admin/upload - Upload product image (admin only).
- * Saves to public/uploads/, returns the public URL.
+ * Uses S3 when AWS_* + AWS_S3_BUCKET_NAME are set; otherwise saves to public/uploads/.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import { randomUUID } from "crypto";
 import { requireAdmin } from "@/lib/admin-auth";
+import { isS3UploadEnabled, uploadBufferToS3 } from "@/lib/s3";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+/** Extension from MIME only — original filename is never used in stored object names. */
+const EXT_BY_MIME: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/jpg": ".jpg",
+  "image/png": ".png",
+  "image/webp": ".webp",
+  "image/gif": ".gif",
+};
+
+function extensionForMime(mime: string): string {
+  return EXT_BY_MIME[mime] ?? ".jpg";
+}
 
 export async function POST(request: NextRequest) {
   const auth = await requireAdmin(request);
@@ -39,13 +54,21 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const { name: baseName, ext: parsedExt } = path.parse(file.name);
-    const ext = parsedExt || ".jpg";
-    const safeBase = baseName.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const safeName = `${Date.now()}-${safeBase}${ext}`;
+    const ext = extensionForMime(file.type);
+    const safeName = `${randomUUID()}${ext}`;
+    const key = path.posix.join("uploads", safeName);
+
+    if (isS3UploadEnabled()) {
+      const url = await uploadBufferToS3({
+        key,
+        buffer,
+        contentType: file.type || "application/octet-stream",
+      });
+      return NextResponse.json({ url });
+    }
+
     const uploadDir = path.join(process.cwd(), "public", "uploads");
     const filePath = path.join(uploadDir, safeName);
-
     await mkdir(uploadDir, { recursive: true });
     await writeFile(filePath, buffer);
 

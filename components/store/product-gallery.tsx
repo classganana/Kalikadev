@@ -14,8 +14,9 @@ interface ProductGalleryProps {
 }
 
 export function ProductGallery({ images, productName }: ProductGalleryProps) {
+  const validImages = images.filter((src) => typeof src === "string" && src.trim().length > 0);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const mainImage = images[selectedIndex] ?? images[0];
+  const mainImage = validImages[selectedIndex] ?? validImages[0];
 
   return (
     <div className="space-y-4">
@@ -26,9 +27,9 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
           className="object-cover"
         />
       </div>
-      {images.length > 1 && (
+      {validImages.length > 1 && (
         <div className="flex gap-3 overflow-x-auto pb-2">
-          {images.map((src, i) => (
+          {validImages.map((src, i) => (
             <button
               key={i}
               type="button"

@@ -30,7 +30,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (body.description != null) update.description = String(body.description).trim();
     if (body.price != null) update.price = Number(body.price);
     if (body.variant != null) update.variant = String(body.variant).trim();
-    if (body.images != null) update.images = Array.isArray(body.images) ? body.images.filter(Boolean) : [body.images];
+    if (body.images != null) {
+      const imgs = Array.isArray(body.images) ? body.images : [body.images];
+      update.images = imgs.map((s: string) => String(s).trim()).filter(Boolean);
+    }
     if (body.stock != null) update.stock = Math.max(0, Number(body.stock));
 
     if (Object.keys(update).length > 0) {

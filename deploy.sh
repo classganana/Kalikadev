@@ -4,7 +4,7 @@
 
 set -e
 
-EC2_HOST="ubuntu@52.66.202.5"
+EC2_HOST="ubuntu@65.0.185.143"
 EC2_PATH="/home/ubuntu/Kalikadev"
 SSH_KEY="/Users/ayushdixit/Documents/dev-outreach-key.pem"
 
@@ -13,12 +13,17 @@ npm run build
 
 echo ""
 echo "=== 2. Syncing to EC2 (excluding node_modules) ==="
+# Exclude huge local-only paths: .next/dev (Turbopack) blows up transfer size and can kill SSH mid-rsync.
+RSYNC_SSH="ssh -i $SSH_KEY -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes"
 rsync -avz --delete \
-  -e "ssh -i $SSH_KEY" \
+  -e "$RSYNC_SSH" \
   --exclude 'node_modules' \
   --exclude '.git' \
   --exclude '.env.local' \
   --exclude '.env.production' \
+  --exclude '.next/dev' \
+  --exclude '.next/cache/images' \
+  --exclude '.cursor' \
   --filter 'P public/uploads' \
   ./ "$EC2_HOST:$EC2_PATH/"
 

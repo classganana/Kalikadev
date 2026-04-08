@@ -4,6 +4,7 @@
  * Image upload field - Interactive upload with drag & drop, thumbnails, remove.
  */
 import { useRef, useState } from "react";
+import { getImageUrl } from "@/lib/utils";
 
 interface ImageUploadFieldProps {
   value: string;
@@ -97,11 +98,6 @@ export function ImageUploadField({
     setIsDragging(false);
   };
 
-  const getImageSrc = (url: string) => {
-    if (url.startsWith("http")) return url;
-    return url.startsWith("/") ? url : `/${url.replace(/^\//, "")}`;
-  };
-
   return (
     <div className="space-y-4">
       {(label || hint) && (
@@ -191,7 +187,7 @@ export function ImageUploadField({
               >
                 <div className="relative size-20 sm:size-24">
                   <img
-                    src={getImageSrc(url)}
+                    src={getImageUrl(url)}
                     alt={`Preview ${index + 1}`}
                     className="size-full object-cover"
                     onError={(e) => {
